@@ -1,0 +1,6 @@
+.vscode/
+AppData/
+*.bin
+node_modules/
+*.log
+*.tmp
