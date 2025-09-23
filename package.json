@@ -1,0 +1,26 @@
+{
+  "name": "desarollowebii-nrc-5268",
+  "version": "1.0.0",
+  "description": "Proyecto de Desarrollo Web II - Manejo de APIs con TypeScript",
+  "main": "js/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node js/main.js",
+    "dev": "tsc && node js/main.js",
+    "dev:watch": "tsc --watch",
+    "clean": "rm -rf js/*"
+  },
+  "keywords": ["typescript", "api", "fetch", "crud"],
+  "author": "Estudiante DWII",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
