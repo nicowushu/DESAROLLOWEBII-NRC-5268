@@ -119,4 +119,5 @@ async function ejecutarEjemplo() {
   await servicio.eliminarPost(idParaEliminar);
 }
 
+
 ejecutarEjemplo();
