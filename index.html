@@ -2,11 +2,136 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>CRUD de Alumnos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD de Posts - TypeScript Demo</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Hola, alumno!</h1>
+  <div class="container">
+    <h1>🚀 CRUD de Posts con TypeScript</h1>
+    
+    <div class="actions">
+      <h2>Operaciones CRUD:</h2>
+      
+      <button id="btnConsultar" class="btn btn-primary">
+        📖 Consultar Posts
+      </button>
+      
+      <button id="btnCrear" class="btn btn-success">
+        ➕ Crear Post
+      </button>
+      
+      <!-- Sección para editar -->
+      <div class="edit-form">
+        <h3>✏️ Editar Post:</h3>
+        <input type="number" id="editId" placeholder="ID del post (ej: 2)" value="2" min="1" max="100">
+        <input type="text" id="editTitle" placeholder="Nuevo título" value="Mi título editado">
+        <textarea id="editBody" placeholder="Nuevo contenido">Contenido editado desde la web</textarea>
+        <button id="btnEditar" class="btn btn-warning">Editar Post</button>
+      </div>
+      
+      <!-- Sección para eliminar -->
+      <div class="delete-form">
+        <h3>🗑️ Eliminar Post:</h3>
+        <input type="number" id="deleteId" placeholder="ID del post (ej: 1)" value="1" min="1" max="100">
+        <button id="btnEliminar" class="btn btn-danger">Eliminar Post</button>
+      </div>
+    </div>
+
+    <div class="output">
+      <h3>📋 Resultados:</h3>
+      <div id="resultados" class="results-box">
+        <p><em>Haz clic en cualquier botón para ver los resultados aquí...</em></p>
+      </div>
+    </div>
+  </div>
 
   <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const servicio = new DataService('https://jsonplaceholder.typicode.com/posts');
+      const resultados = document.getElementById('resultados');
+
+      function mostrarResultado(mensaje) {
+        resultados.innerHTML = `<p>${mensaje}</p>`;
+        console.log(mensaje);
+      }
+
+      // Botón Consultar
+      document.getElementById('btnConsultar').addEventListener('click', async () => {
+        mostrarResultado('🔄 Consultando datos...');
+        const posts = await servicio.consultarDatos();
+        const primeros3 = posts.slice(0, 3);
+        let html = '<h4>Primeros 3 posts:</h4><ul>';
+        primeros3.forEach(post => {
+          html += `<li><strong>ID ${post.id}:</strong> ${post.title}</li>`;
+        });
+        html += '</ul>';
+        resultados.innerHTML = html;
+      });
+
+      // Botón Crear
+      document.getElementById('btnCrear').addEventListener('click', async () => {
+        mostrarResultado('➕ Creando nuevo post...');
+        const nuevoPost = {
+          title: 'Post creado desde HTML',
+          body: 'Este post fue creado usando los botones de la interfaz.',
+          userId: 10
+        };
+        const postCreado = await servicio.crearPost(nuevoPost);
+        if (postCreado) {
+          resultados.innerHTML = `
+            <h4>✅ Post creado exitosamente:</h4>
+            <p><strong>ID:</strong> ${postCreado.id}</p>
+            <p><strong>Título:</strong> ${postCreado.title}</p>
+            <p><strong>Contenido:</strong> ${postCreado.body}</p>
+          `;
+        }
+      });
+
+      // Botón Editar
+      document.getElementById('btnEditar').addEventListener('click', async () => {
+        const editId = document.getElementById('editId').value;
+        const editTitle = document.getElementById('editTitle').value;
+        const editBody = document.getElementById('editBody').value;
+        
+        if (!editId || !editTitle || !editBody) {
+          mostrarResultado('❌ Por favor completa todos los campos para editar');
+          return;
+        }
+        
+        mostrarResultado(`✏️ Editando post ID ${editId}...`);
+        const datosActualizados = {
+          title: editTitle,
+          body: editBody
+        };
+        const postEditado = await servicio.editarPost(parseInt(editId), datosActualizados);
+        if (postEditado) {
+          resultados.innerHTML = `
+            <h4>✅ Post editado exitosamente:</h4>
+            <p><strong>ID:</strong> ${postEditado.id}</p>
+            <p><strong>Nuevo Título:</strong> ${postEditado.title}</p>
+            <p><strong>Nuevo Contenido:</strong> ${postEditado.body}</p>
+          `;
+        } else {
+          resultados.innerHTML = '<h4>❌ Error al editar el post</h4>';
+        }
+      });
+
+      // Botón Eliminar
+      document.getElementById('btnEliminar').addEventListener('click', async () => {
+        const deleteId = document.getElementById('deleteId').value;
+        
+        if (!deleteId) {
+          mostrarResultado('❌ Por favor ingresa un ID para eliminar');
+          return;
+        }
+        
+        mostrarResultado(`🗑️ Eliminando post ID ${deleteId}...`);
+        await servicio.eliminarPost(parseInt(deleteId));
+        resultados.innerHTML = `<h4>✅ Post con ID ${deleteId} eliminado exitosamente</h4>`;
+      });
+    });
+  </script>
 </body>
 </html>
