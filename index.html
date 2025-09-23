@@ -3,45 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRUD de Posts - TypeScript Demo</title>
+  <title>Gestión de Alumnos - CRUD TypeScript</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <h1>🚀 CRUD de Posts con TypeScript</h1>
+    <h1>🎓 Sistema de Gestión de Alumnos</h1>
     
     <div class="actions">
       <h2>Operaciones CRUD:</h2>
       
       <button id="btnConsultar" class="btn btn-primary">
-        📖 Consultar Posts
+        � Consultar Alumnos
       </button>
       
       <button id="btnCrear" class="btn btn-success">
-        ➕ Crear Post
+        ➕ Registrar Alumno
       </button>
       
       <!-- Sección para editar -->
       <div class="edit-form">
-        <h3>✏️ Editar Post:</h3>
-        <input type="number" id="editId" placeholder="ID del post (ej: 2)" value="2" min="1" max="100">
-        <input type="text" id="editTitle" placeholder="Nuevo título" value="Mi título editado">
-        <textarea id="editBody" placeholder="Nuevo contenido">Contenido editado desde la web</textarea>
-        <button id="btnEditar" class="btn btn-warning">Editar Post</button>
+        <h3>✏️ Editar Alumno:</h3>
+        <input type="number" id="editId" placeholder="ID del alumno (ej: 2)" value="2" min="1" max="100">
+        <input type="text" id="editTitle" placeholder="Nuevo nombre" value="Juan Pérez Actualizado">
+        <textarea id="editBody" placeholder="Información del alumno">Estudiante de Desarrollo Web II - Información actualizada</textarea>
+        <button id="btnEditar" class="btn btn-warning">Editar Alumno</button>
       </div>
       
       <!-- Sección para eliminar -->
       <div class="delete-form">
-        <h3>🗑️ Eliminar Post:</h3>
-        <input type="number" id="deleteId" placeholder="ID del post (ej: 1)" value="1" min="1" max="100">
-        <button id="btnEliminar" class="btn btn-danger">Eliminar Post</button>
+        <h3>🗑️ Dar de Baja Alumno:</h3>
+        <input type="number" id="deleteId" placeholder="ID del alumno (ej: 1)" value="1" min="1" max="100">
+        <button id="btnEliminar" class="btn btn-danger">Dar de Baja</button>
       </div>
     </div>
 
     <div class="output">
-      <h3>📋 Resultados:</h3>
+      <h3>� Resultados del Sistema:</h3>
       <div id="resultados" class="results-box">
-        <p><em>Haz clic en cualquier botón para ver los resultados aquí...</em></p>
+        <p><em>Selecciona una operación para gestionar los alumnos...</em></p>
       </div>
     </div>
   </div>
@@ -57,79 +57,79 @@
         console.log(mensaje);
       }
 
-      // Botón Consultar
+      // Botón Consultar Alumnos
       document.getElementById('btnConsultar').addEventListener('click', async () => {
-        mostrarResultado('🔄 Consultando datos...');
-        const posts = await servicio.consultarDatos();
-        const primeros3 = posts.slice(0, 3);
-        let html = '<h4>Primeros 3 posts:</h4><ul>';
-        primeros3.forEach(post => {
-          html += `<li><strong>ID ${post.id}:</strong> ${post.title}</li>`;
+        mostrarResultado('🔄 Consultando lista de alumnos...');
+        const alumnos = await servicio.consultarDatos();
+        const primeros3 = alumnos.slice(0, 3);
+        let html = '<h4>📋 Primeros 3 alumnos registrados:</h4><ul>';
+        primeros3.forEach(alumno => {
+          html += `<li><strong>ID ${alumno.id}:</strong> ${alumno.title} <br><small>Info: ${alumno.body.substring(0, 50)}...</small></li>`;
         });
         html += '</ul>';
         resultados.innerHTML = html;
       });
 
-      // Botón Crear
+      // Botón Registrar Alumno
       document.getElementById('btnCrear').addEventListener('click', async () => {
-        mostrarResultado('➕ Creando nuevo post...');
-        const nuevoPost = {
-          title: 'Post creado desde HTML',
-          body: 'Este post fue creado usando los botones de la interfaz.',
+        mostrarResultado('➕ Registrando nuevo alumno...');
+        const nuevoAlumno = {
+          title: 'María González - Estudiante Nuevo',
+          body: 'Alumna de Desarrollo Web II - Recién inscrita en el curso.',
           userId: 10
         };
-        const postCreado = await servicio.crearPost(nuevoPost);
-        if (postCreado) {
+        const alumnoCreado = await servicio.crearPost(nuevoAlumno);
+        if (alumnoCreado) {
           resultados.innerHTML = `
-            <h4>✅ Post creado exitosamente:</h4>
-            <p><strong>ID:</strong> ${postCreado.id}</p>
-            <p><strong>Título:</strong> ${postCreado.title}</p>
-            <p><strong>Contenido:</strong> ${postCreado.body}</p>
+            <h4>✅ Alumno registrado exitosamente:</h4>
+            <p><strong>ID:</strong> ${alumnoCreado.id}</p>
+            <p><strong>Nombre:</strong> ${alumnoCreado.title}</p>
+            <p><strong>Información:</strong> ${alumnoCreado.body}</p>
           `;
         }
       });
 
-      // Botón Editar
+      // Botón Editar Alumno
       document.getElementById('btnEditar').addEventListener('click', async () => {
         const editId = document.getElementById('editId').value;
         const editTitle = document.getElementById('editTitle').value;
         const editBody = document.getElementById('editBody').value;
         
         if (!editId || !editTitle || !editBody) {
-          mostrarResultado('❌ Por favor completa todos los campos para editar');
+          mostrarResultado('❌ Por favor completa todos los campos del alumno');
           return;
         }
         
-        mostrarResultado(`✏️ Editando post ID ${editId}...`);
+        mostrarResultado(`✏️ Actualizando información del alumno ID ${editId}...`);
         const datosActualizados = {
           title: editTitle,
           body: editBody
         };
-        const postEditado = await servicio.editarPost(parseInt(editId), datosActualizados);
-        if (postEditado) {
+        const alumnoEditado = await servicio.editarPost(parseInt(editId), datosActualizados);
+        if (alumnoEditado) {
           resultados.innerHTML = `
-            <h4>✅ Post editado exitosamente:</h4>
-            <p><strong>ID:</strong> ${postEditado.id}</p>
-            <p><strong>Nuevo Título:</strong> ${postEditado.title}</p>
-            <p><strong>Nuevo Contenido:</strong> ${postEditado.body}</p>
+            <h4>✅ Información del alumno actualizada:</h4>
+            <p><strong>ID:</strong> ${alumnoEditado.id}</p>
+            <p><strong>Nombre Actualizado:</strong> ${alumnoEditado.title}</p>
+            <p><strong>Nueva Información:</strong> ${alumnoEditado.body}</p>
           `;
         } else {
-          resultados.innerHTML = '<h4>❌ Error al editar el post</h4>';
+          resultados.innerHTML = '<h4>❌ Error al actualizar la información del alumno</h4>';
         }
       });
 
-      // Botón Eliminar
+      // Botón Dar de Baja
       document.getElementById('btnEliminar').addEventListener('click', async () => {
         const deleteId = document.getElementById('deleteId').value;
         
         if (!deleteId) {
-          mostrarResultado('❌ Por favor ingresa un ID para eliminar');
+          mostrarResultado('❌ Por favor ingresa el ID del alumno a dar de baja');
           return;
         }
         
-        mostrarResultado(`🗑️ Eliminando post ID ${deleteId}...`);
+        mostrarResultado(`🗑️ Dando de baja al alumno ID ${deleteId}...`);
         await servicio.eliminarPost(parseInt(deleteId));
-        resultados.innerHTML = `<h4>✅ Post con ID ${deleteId} eliminado exitosamente</h4>`;
+        resultados.innerHTML = `<h4>✅ Alumno con ID ${deleteId} dado de baja exitosamente</h4>`;
       });
     });
   </script>
